@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block layout %}
+<body>
+    <div id="templatemo_wrapper">
+        <div id="templatemo_header">
+
+            <div id="templatemo_menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/productsList">Productos</a></li>
+                    <li><a href="/customersList">Clientes</a></li>
+                    <li><a href="/departamentsList">Departamentos</a></li>
+                    <li><a href="/employesList">Empleados</a></li>
+                    <li><a href="/ordersList">Pedidos</a></li>
+                </ul>    	
+            </div> <!-- end of templatemo_menu -->
+
+            <div id="site_title">
+                <h1>
+                    <strong>{{strong}}</strong>
+                    <span>{{span}}</span>
+            </h1>
+            </div> <!-- end of site_title -->
+
+        </div> <!-- end of templatemo_header -->
+
+        <div id="templatemo_main">
+            {% block content %}
+            {% endblock %}
+        </div> <!-- end of templatemo_main -->
+   
+        <div id="templatemo_footer">
+            Copyright © 2048 <a href="#">Your Company Name</a> | 
+            <a href="http://www.iwebsitetemplate.com" target="_parent">Website Templates</a> by <a href="http://www.templatemo.com" target="_parent">CSS Templates</a>
+        </div> <!-- end of templatemo_footer -->
+    </div>
+</body>
+{% endblock %}

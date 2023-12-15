@@ -4,6 +4,8 @@ namespace app\Entity;
 
 use app\Repository\PedidosRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -11,6 +13,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: PedidosRepository::class)]
@@ -22,7 +25,8 @@ class PedidosEntity{
     #[Column(name: 'idPedidos', type: 'integer')]
     private int $idPedidos;
 
-    #[ManyToOne(targetEntity: ProveedoresEntity::class, inversedBy: 'pedidos')]
+    //Muchos pedidos tienen un proveedor (unidireccional)
+    #[ManyToOne(targetEntity: ProveedoresEntity::class)]
     #[JoinColumn(name: 'idProveedor', referencedColumnName: 'idProveedor')]
     private ProveedoresEntity $proveedor;
 
@@ -34,6 +38,14 @@ class PedidosEntity{
 
     #[Column(name: 'estado', type: Types::BOOLEAN, options:['default'=>true])]
     private bool $estado=true;
+
+    //Un pedido tiene muchas lineas de pedidos(bidireccional)
+    #[OneToMany(targetEntity: LineasPedidosEntity::class, mappedBy: 'pedido')]
+    private ?Collection $lineasPedido;
+
+    public function __construct() {
+        $this->lineasPedido = new ArrayCollection();
+    }
 
     /**
      * Get the value of idPedidos
@@ -94,7 +106,7 @@ class PedidosEntity{
     /**
      * Get the value of estado
      */
-    public function getEstado(): bool
+    public function isEstado(): bool
     {
         return $this->estado;
     }
@@ -105,5 +117,21 @@ class PedidosEntity{
     public function setEstado(bool $estado): void
     {
         $this->estado = $estado;
+    }
+
+    /**
+     * Get the value of lineasPedido
+     */
+    public function getLineasPedido(): ?Collection
+    {
+        return $this->lineasPedido;
+    }
+
+    /**
+     * Set the value of lineasPedido
+     */
+    public function setLineasPedido(?Collection $lineasPedido): void
+    {
+        $this->lineasPedido = $lineasPedido;
     }
 }

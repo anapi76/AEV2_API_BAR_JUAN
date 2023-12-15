@@ -17,17 +17,17 @@ class ProductosEntity
 {
     #[Id]
     #[GeneratedValue]
-    #[Column(name: 'idProducto', type: "integer")]
+    #[Column(name: 'idProducto', type: 'integer')]
     private int $idProducto;
 
     #[Column(name: 'nombre', type: 'string', length: 50, unique: true)]
     private string $nombre;
 
     #[Column(name: 'descripcion', type: 'string', length: 100, nullable: true)]
-    private ?string $descripcion=null;
+    private ?string $descripcion = null;
 
-    #[column(name:'precio', type:'decimal', precision:6, scale:2)]
-    private float $precio;
+    #[column(name: 'precio', type: 'decimal', precision: 8, scale: 2, options: ['default' => 0.0])]
+    private float $precio = 0.0;
 
 
     /**

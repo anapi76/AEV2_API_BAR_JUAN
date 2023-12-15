@@ -3,56 +3,12 @@
     "controller": "MainController",
     "action":   "main"
   },
-  "/productsList":{
-    "controller":"ProductsController",
-    "action": "productsList"
+  "/stock":{
+    "controller":"StockController",
+    "action": "stockList"
   },
-  "/insertProduct":{
-    "controller":"ProductsController",
-    "action": "insert"
-  },
-  "/updateProduct":{
-    "controller":"ProductsController",
-    "action": "update"
-  },
-  "/deleteProduct":{
-    "controller":"ProductsController",
-    "action": "delete"
-  },
-  "/customersList": {
-    "controller": "CustomerController",
-    "action": "customersList"
-  },
-  "/insertCustomer": {
-    "controller": "CustomerController",
-    "action": "insert"
-  },
-  "/updateCustomer": {
-    "controller": "CustomerController",
-    "action": "update"
-  },
-  "/delete": {
-    "controller": "CustomerController",
-    "action": "delete"
-  },
-  "/customerDetail": {
-    "controller": "CustomerDetailController",
-    "action": "customerDetail"
-  },
-  "/departamentsList": {
-    "controller": "DepartamentsController",
-    "action": "departamentsList"
-  },
-  "/employesList": {
-    "controller": "EmployesController",
-    "action": "employesList"
-  },
-  "/ordersList": {
-    "controller": "OrdersController",
-    "action": "ordersList"
-  },
-  "/orderDetail": {
-    "controller": "OrderDetailController",
-    "action": "orderDetail"
+  "/pedidos":{
+    "controller":"PedidosController",
+    "action": "pedidosList"
   }
 }

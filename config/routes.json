@@ -9,6 +9,6 @@
   },
   "/pedidos":{
     "controller":"PedidosController",
-    "action": "pedidosList"
+    "action": "createPedido"
   }
 }

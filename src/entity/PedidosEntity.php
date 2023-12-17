@@ -30,7 +30,7 @@ class PedidosEntity{
     #[JoinColumn(name: 'idProveedor', referencedColumnName: 'idProveedor')]
     private ProveedoresEntity $proveedor;
 
-    #[Column(name: 'fecha', type: Types::DATE_MUTABLE)]
+    #[Column(name: 'fecha', type: 'datetime')]
     private DateTime $fecha;
 
     #[Column(name: 'detalles', type: 'string', length: 100, nullable: true)]

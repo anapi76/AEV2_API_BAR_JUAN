@@ -1,0 +1,16 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+        <h4>{{title1}}</h4>
+        <form action="" method="post">
+            <p>Selecciona el proveedor: 
+            <select name='name'>
+            {% for row in proveedores %}
+                <option value={{row.getIdProveedor()}}>{{row.getNombre()}}</option>
+            {% endfor %}
+            </select></p>
+            <p>Detalles: <input type="string" name="detalles" maxlentgh=100></p>
+            <p><input type="submit" value="Crear pedido"> </p>
+        </form>
+        <p class="button"><a href="/">Volver</a></p>
+{% endblock %}

@@ -13,7 +13,7 @@
                                 Entregado</p>
                                 {% endif %}
             <p>Selecciona el producto: 
-            <select name='name'>
+            <select name='idProducto'>
                 {% for row in productos %}
                     <option value={{row.getIdProducto()}}>{{row.getNombre()}}</option>
                 {% endfor %}

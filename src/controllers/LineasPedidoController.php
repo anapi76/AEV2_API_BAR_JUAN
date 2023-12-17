@@ -7,41 +7,34 @@ namespace app\Controllers;
 
 use app\Core\AbstractController;
 use app\Core\EntityManager;
+use app\Entity\LineasPedidosEntity;
+use app\Entity\PedidosEntity;
 use app\Entity\ProductosEntity;
 
 class LineasPedidoController extends AbstractController
 {
-    public function insertLineas($pedido)
+    /* public function insertLineas(PedidosEntity $pedido)
     {
         $entityManager = (new EntityManager)->getEntityManager();
         $productosRepository = $entityManager->getRepository(ProductosEntity::class);
-
         if (count($_POST) > 0) {
-            /*  $poducto = new PedidosEntity();
-            $proveedor = $proveedoresRepository->find($id);
-            $pedido->setProveedor($proveedor);
-            $fecha = new DateTime();
-            dump($fecha);
-            $pedido->setFecha($fecha);
-            if(isset($_POST['detalles'])){
-                $pedido->setDetalles($_POST['detalles']);
-            }
-            $entityManager->persist($pedido);
-            $entityManager->flush();
-            $lineasPedido=new LineasPedidoController();
-            $lineasPedido->insertLineas($pedido); */
+            $lineasPedido = new LineasPedidosEntity();
+            $id = intval($_POST['idProducto']);
+            $producto = $productosRepository->find($id);
+            $lineasPedido->setProducto($producto);
+            $lineasPedido->setCantidad(floatval($_POST['cantidad']));
+            $lineasPedido->setPedido($pedido);
+            $lineasPedidoRepository = $entityManager->getRepository(LineasPedidosEntity::class);
+            dump($lineasPedido);
+            if ($lineasPedidoRepository->insert($lineasPedido)) {
+                
+            } else {
+                $main = new MainController();
+                $msg = 'No se ha podido insertar el detalle';
+                $main->json400($msg);
+            }  
         } else {
-            $productos = $productosRepository->findAll();
-            $this->render(
-                "lineasPedido.html.twig",
-                //-- Le pasamos al renderizado los parámetros, que son todos los datos que hemos obtenido del modelo.
-                [
-                    'title' => 'Lineas de Pedido',
-                    'title1' => 'Insertar las líneas del pedido',
-                    'pedido' => $pedido,
-                    'productos' => $productos
-                ]
-            );
+ 
         }
-    }
+    } */
 }

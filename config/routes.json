@@ -9,6 +9,10 @@
   },
   "/pedidos":{
     "controller":"PedidosController",
-    "action": "createPedido"
+    "action": "crearPedido"
+  },
+  "/listarPedidos":{
+    "controller":"PedidosController",
+    "action": "listarPedidos"
   }
 }

@@ -3,7 +3,6 @@
 namespace app\Repository;
 
 use app\Entity\ProductosEntity;
-use app\Entity\StockEntity;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
@@ -11,35 +10,39 @@ class StockRepository extends EntityRepository
 {
     public function stock(): array
     {
-        $entityManager = $this->getEntityManager();
-        $productosRepository = $entityManager->getRepository(ProductosEntity::class);
-        $productos = $productosRepository->findAll();
-        $repositoryStock = $entityManager->getRepository(StockEntity::class);
+        $productos = $this->findProductos();
         foreach ($productos as $producto) {
             $id = $producto->getIdProducto();
-            $data = $repositoryStock->findBy(['producto' => $id], ['fecha' => 'DESC']);
+            $data = $this->findBy(['producto' => $id], ['fecha' => 'DESC']);
             $stock[] = $data[0];
         }
-
         return $stock;
     }
 
-    public function stockFecha(string $fecha)
+    public function stockFecha(string $fecha):?array
     {
-        $entityManager = $this->getEntityManager();
-        $productosRepository = $entityManager->getRepository(ProductosEntity::class);
-        $productos = $productosRepository->findAll();
-        $repositoryStock = $entityManager->getRepository(StockEntity::class);
+        $productos = $this->findProductos();
         //dump($fecha);
         foreach ($productos as $producto) {
             $id = $producto->getIdProducto();
             $date = new DateTime($fecha);
-            $data = $repositoryStock->findBy(['producto' => $id, 'fecha' => $date], ['fecha' => 'DESC']);
-            if(!empty($data)){
+            $data = $this->findBy(['producto' => $id, 'fecha' => $date], ['fecha' => 'DESC']);
+            if (!empty($data)) {
                 $stock[] = $data[0];
+            }
+            else{
+                $stock=null;
             }
         }
         //dump($stock);
         return $stock;
+    }
+
+    public function findProductos(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $productosRepository = $entityManager->getRepository(ProductosEntity::class);
+        $productos = $productosRepository->findAll();
+        return $productos;
     }
 }

@@ -23,4 +23,20 @@ class MainController extends AbstractController
             ]
         );
     }
+    
+    public function json400(?string $msg): mixed
+    {
+        $status = 400;
+        if (is_null($msg)) {
+            $result = 'Peticion invalida: ' . date('d-m-y h:i:s');
+        } else {
+            $result = $msg . date('d-m-Y H:i:s');
+        }
+        $jsonArray = array(
+            'status' => $status,
+            'result' => $result
+        );
+        $json = json_encode($jsonArray, http_response_code($status));
+        return $json;
+    }
 }

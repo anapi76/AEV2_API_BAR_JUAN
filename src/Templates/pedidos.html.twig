@@ -1,15 +1,29 @@
 {% extends "layout.html.twig" %}
 
 {% block content %}
+<p class="button"><a href="/">Listar pedidos</a></p>
         <h4>{{title1}}</h4>
         <form action="" method="post">
             <p>Selecciona el proveedor: 
-            <select name='name'>
+            <select name='idProveedor'>
             {% for row in proveedores %}
                 <option value={{row.getIdProveedor()}}>{{row.getNombre()}}</option>
             {% endfor %}
             </select></p>
             <p>Detalles: <input type="string" name="detalles" maxlentgh=100></p>
+            <p>Productos: 
+            {#<select name='idProducto'>
+                {% for row in productos %}
+                    <option value={{row.getIdProducto()}}>{{row.getNombre()}}</option>
+                {% endfor %}
+            </select></p>
+            <p>Cantidad: <input type="number" name="cantidad" required></p>#}
+            {% for row in productos %}
+            <p>
+                <label for={{row.getIdProducto()}}>{{row.getNombre()}}</label>
+                <input type="text" id={{row.getIdProducto()}} name="cantidades[{{row.getIdProducto()}}]" placeholder="Cantidad">
+            </p>
+            {% endfor %}
             <p><input type="submit" value="Crear pedido"> </p>
         </form>
         <p class="button"><a href="/">Volver</a></p>

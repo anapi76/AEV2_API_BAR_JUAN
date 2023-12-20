@@ -8,26 +8,24 @@
         <p><a href="/">Volver</a></p>
     {% else %}
         <h4>{{title1}}</h4>
-        <p class="button"><a href='/insertCustomer' onMouseOver="this.style.cssText='color: grey'" onMouseOut="this.style.cssText='color:white'">Insertar</a></p>
         <table cellpadding="5">
             <tr>
-                <th>Producto</th>
-                <th>fecha</th>
-                <th>hora</th>
-                <th>cantidad</th>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Cantidad</th>
             </tr>
         {% for row in resultados %}
             <tr>
+                <td>{{row.getProducto().getIdProducto()}}</td>
                 <td>{{row.getProducto().getNombre()}}</td>
-                <td>{{row.getFecha()|date('d-m-Y')}}</td>
-                <td>{{row.getFecha()|date('H:i:s')}}</td>
+                <td>{{row.getFecha()|date('d-m-Y H:i:s')}}</td>
                 <td>{{row.getCantidad()}}</td>
-                <td><a style='display:inline-block' href="updateCustomer/{{row.getCienteCod()}}/" class='item'><img style='width:20px' src='/images/update.png'></td><td></a><a style='display:inline-block' href="/deleteCustomer/{{row.getClienteCod()}}/" class='item'><img style='width:20px' src='/images/delete.png'></a></td>
             </tr>
         {% endfor %}
         <form action="" method="post">
             <p>Introduce la fecha: <input type="date" name="fecha"></p>
-            <p>Introduce la hora: <input type="time" name="hora" step="0.001"></p>
+            {#<p>Introduce la hora: <input type="time" name="hora" step="0.001"></p>#}
             <p><input type="submit" value="Buscar"> </p>
         </form>
         </table>

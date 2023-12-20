@@ -13,13 +13,13 @@ class PedidosRepository extends EntityRepository
         if (is_null($pedido)) {
             return null;
         } else {
-            $estado = ($pedido->isEstado()) ? 'Entregado' : 'Pendiente';
+            $estado = ($pedido->isEstado()) ? 'Creado' : 'Entregado';
             $pedidoJSON = array(
                 'PROVEEDOR' => $pedido->getProveedor()->getNombre(),
                 'FECHA' => ($pedido->getFecha())->format('d-m-Y'),
                 'HORA' => ($pedido->getFecha())->format('H:m:s'),
                 'DETALLES' => $pedido->getDetalles(),
-                'ESTADO' => $estado,
+                //'ESTADO' => $estado,
                 'LINEAS DE PEDIDO' => $this->lineasPedidosJSON($pedido->getLineasPedido())
             );
             return $pedidoJSON;
@@ -33,9 +33,11 @@ class PedidosRepository extends EntityRepository
         } else {
             $json = array();
             foreach ($lineasPedido as $linea) {
+                $estado = ($linea->isEntregado()) ? 'Creado' : 'Entregado';
                 $json[$linea->getIdLinea()] = array(
                     'PRODUCTO' => $linea->getProducto()->getNombre(),
-                    'CANTIDAD' => $linea->getCantidad()
+                    'CANTIDAD' => $linea->getCantidad(),
+                    'ESTADO'=>$estado
                 );
             }
             return $json;
@@ -50,7 +52,7 @@ class PedidosRepository extends EntityRepository
         } else {
             $json = array();
             foreach ($pedidos as $pedido) {
-                $estado = ($pedido->isEstado()) ? 'Entregado' : 'Pendiente';
+                $estado = ($pedido->isEstado()) ? 'Creado' : 'Entregado';
                 $json[$pedido->getIdPedidos()] = array(
                     'PROVEEDOR' => $pedido->getProveedor()->getNombre(),
                     'FECHA' => ($pedido->getFecha())->format('d-m-Y'),
@@ -64,7 +66,7 @@ class PedidosRepository extends EntityRepository
         }
     }
 
-    public function insert(?PedidosEntity $pedido): bool
+    public function testInsert(?PedidosEntity $pedido): bool
     {
         if (empty($pedido) || is_null($pedido)) {
             return false;

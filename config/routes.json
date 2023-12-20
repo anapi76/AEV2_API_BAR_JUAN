@@ -1,7 +1,7 @@
 {
   "/":{
     "controller": "MainController",
-    "action":   "main"
+    "action": "main"
   },
   "/stock":{
     "controller":"StockController",

@@ -8,29 +8,39 @@ namespace app\Controllers;
 use app\Core\AbstractController;
 use app\Core\EntityManager;
 use app\Entity\StockEntity;
+use DateTime;
 
 class StockController extends AbstractController
 {
+    private EntityManager $em;
+
+    public function __construct()
+    {
+        $this->em = new EntityManager();
+        parent::__construct();
+    }
+
     public function stockList()
     {
-        $entityManager = (new EntityManager)->getEntityManager();
-        $stockRepository = $entityManager->getRepository(StockEntity::class);
-        if(!isset($_POST['fecha']) && !isset($_POST['hora'])){
+        $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);
+        if (!isset($_POST['fecha']) /* && !isset($_POST['hora'] )*/) {
             $stock = $stockRepository->stock();
-        }
-       else{
-        $fecha=$_POST['fecha'];
-        $hora=$_POST['hora'];
+        } else {
+            $fecha = $_POST['fecha'];
+            /*  $hora=$_POST['hora'];
         $fechaDateTime=$fecha." ".$hora;
-        $stock = $stockRepository->stockFecha($fechaDateTime);
-       }
+        $fechaDateTime=new DateTime($fechaDateTime); */
+            //$stock = $stockRepository->stockFecha($fechaDateTime);
+            $fechaDateTime = new DateTime($fecha);
+            $stock = $stockRepository->stockFechaArray($fechaDateTime);
+        }
 
         $this->render(
             "stockList.html.twig",
             //-- Le pasamos al renderizado los parámetros, que son todos los datos que hemos obtenido del modelo.
             [
                 'title' => 'Stock',
-                'title1' => 'Stock',
+                'title1' => 'Stock de productos',
                 'resultados' => $stock
             ]
         );

@@ -15,11 +15,18 @@ use DateTime;
 
 class PedidosController extends AbstractController
 {
+    private EntityManager $em;
+    
+    public function __construct()
+    {
+        $this->em = new EntityManager();
+        parent::__construct();
+    }
+
     public function crearPedido(): void
     {
-        $entityManager = (new EntityManager)->getEntityManager();
-        $proveedoresRepository = $entityManager->getRepository(ProveedoresEntity::class);
-        $productosRepository = $entityManager->getRepository(ProductosEntity::class);
+        $proveedoresRepository = $this->em->getEntityManager()->getRepository(ProveedoresEntity::class);
+        $productosRepository = $this->em->getEntityManager()->getRepository(ProductosEntity::class); 
         if (count($_POST) > 0) {
             // Introducimos los datos del nuevo pedido
             if (isset($_POST['idProveedor'])) {
@@ -32,7 +39,9 @@ class PedidosController extends AbstractController
                 if (isset($_POST['detalles'])) {
                     $pedido->setDetalles($_POST['detalles']);
                 }
-            //Introducimos los datos de cada línea de pedido
+                $this->em->getEntityManager()->persist($pedido);
+
+                //Introducimos los datos de cada línea de pedido
                 $cantidades = $_POST['cantidades'];
                 $cont = 0;
                 foreach ($cantidades as $index => $cantidad) {
@@ -42,18 +51,17 @@ class PedidosController extends AbstractController
                         $lineasPedido->setProducto($producto);
                         $lineasPedido->setCantidad(floatval($cantidad));
                         $lineasPedido->setPedido($pedido);
-                        $entityManager->persist($lineasPedido);
+                        $this->em->getEntityManager()->persist($lineasPedido);
                         $pedido->getLineasPedido()->add($lineasPedido);
                         $cont++;
                     }
                 }
                 if ($cont > 0) {
-                    $entityManager->persist($pedido);
-                    $entityManager->flush();
-                    $pedidoRepository = $entityManager->getRepository(PedidosEntity::class);
-                    if ($pedidoRepository->insert($pedido)) {
+                    $this->em->getEntityManager()->flush();
+                    $pedidoRepository = $this->em->getEntityManager()->getRepository(PedidosEntity::class);
+                    if ($pedidoRepository->testInsert($pedido)) {
                         $pedidoJSON = $pedidoRepository->pedidoJSON($pedido);
-                        echo json_encode($pedidoJSON,JSON_PRETTY_PRINT);
+                        echo json_encode($pedidoJSON, JSON_PRETTY_PRINT);
                     } else {
                         $main = new MainController();
                         $msg = 'No se ha podido insertar el pedido. ';
@@ -86,11 +94,10 @@ class PedidosController extends AbstractController
         }
     }
 
-    public function listarPedidos():void
+    public function listarPedidos(): void
     {
-        $entityManager = (new EntityManager)->getEntityManager();
-        $pedidosRepository = $entityManager->getRepository(PedidosEntity::class);
+        $pedidosRepository=$this->em->getEntityManager()->getRepository(PedidosEntity::class);
         $pedidos = $pedidosRepository->listarPedidosJSON();
-        echo json_encode($pedidos,JSON_PRETTY_PRINT);
+        echo json_encode($pedidos);
     }
 }

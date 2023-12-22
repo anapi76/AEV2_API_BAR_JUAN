@@ -25,8 +25,8 @@ class PedidosEntity{
     #[Column(name: 'idPedidos', type: 'integer')]
     private int $idPedidos;
 
-    //Muchos pedidos tienen un proveedor (unidireccional)
-    #[ManyToOne(targetEntity: ProveedoresEntity::class)]
+    //Muchos pedidos tienen un proveedor (bidireccional)
+    #[ManyToOne(targetEntity: ProveedoresEntity::class, inversedBy:'pedidos')]
     #[JoinColumn(name: 'idProveedor', referencedColumnName: 'idProveedor')]
     private ProveedoresEntity $proveedor;
 

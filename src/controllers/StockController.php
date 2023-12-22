@@ -20,17 +20,13 @@ class StockController extends AbstractController
         parent::__construct();
     }
 
-    public function stockList()
+    public function stockList():void
     {
         $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);
-        if (!isset($_POST['fecha']) /* && !isset($_POST['hora'] )*/) {
+        if (!isset($_POST['fecha']) || empty($_POST['fecha'])) {
             $stock = $stockRepository->stock();
         } else {
             $fecha = $_POST['fecha'];
-            /*  $hora=$_POST['hora'];
-        $fechaDateTime=$fecha." ".$hora;
-        $fechaDateTime=new DateTime($fechaDateTime); */
-            //$stock = $stockRepository->stockFecha($fechaDateTime);
             $fechaDateTime = new DateTime($fecha);
             $stock = $stockRepository->stockFechaArray($fechaDateTime);
         }

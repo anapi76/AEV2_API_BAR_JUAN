@@ -23,8 +23,8 @@ class StockEntity
     #[Column(name: 'idStock', type: 'integer')]
     private int $idStock;
 
-    //muchos registros stock tienen un producto (unidireccional)
-    #[ManyToOne(targetEntity: ProductosEntity::class)]
+    //muchos registros stock tienen un producto (bidireccional)
+    #[ManyToOne(targetEntity: ProductosEntity::class, inversedBy: 'stocks')]
     #[JoinColumn(name: 'id_producto', referencedColumnName: 'idProducto')]
     private ProductosEntity $producto;
 

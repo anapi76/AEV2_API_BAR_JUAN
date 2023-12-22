@@ -27,8 +27,8 @@ class ComandasEntity
     #[Column(name: 'idComanda', type: 'integer')]
     private int $idComanda;
 
-    //Muchas comandas tienen una mesa(unidireccional)
-    #[ManyToOne(targetEntity: MesaEntity::class)]
+    //Muchas comandas tienen una mesa(bidireccional)
+    #[ManyToOne(targetEntity: MesaEntity::class, inversedBy: 'comandas')]
     #[JoinColumn(name: 'idMesa', referencedColumnName: 'idMesa')]
     private MesaEntity $mesa;
 
@@ -39,16 +39,17 @@ class ComandasEntity
     private int $comensales;
 
     #[Column(name: 'detalles', type: 'string', length: 250, nullable: true)]
-    private ?string $detalles=null;
+    private ?string $detalles = null;
 
-    #[Column(name: 'estado', type: Types::BOOLEAN, options:['default'=>true])]
-    private bool $estado=true;
+    #[Column(name: 'estado', type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $estado = true;
 
     //Una comanda tiene muchas lineas de comanda(bidireccional)
     #[OneToMany(targetEntity: LineasComandasEntity::class, mappedBy: 'comanda')]
     private ?Collection $lineasComanda;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->lineasComanda = new ArrayCollection();
     }
 
@@ -119,7 +120,7 @@ class ComandasEntity
     /**
      * Set the value of detalles
      */
-    public function setDetalles(?string $detalles):void
+    public function setDetalles(?string $detalles): void
     {
         $this->detalles = $detalles;
     }

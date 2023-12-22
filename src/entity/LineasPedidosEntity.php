@@ -34,8 +34,8 @@ class LineasPedidosEntity
     #[JoinColumn(name: 'idPedido', referencedColumnName: 'idPedidos')]
     private PedidosEntity $pedido;
 
-    //Muchas lineas de pedido tienen un producto (unidireccional)
-    #[ManyToOne(targetEntity: ProductosEntity::class)]
+    //Muchas lineas de pedido tienen un producto (bidireccional)
+    #[ManyToOne(targetEntity: ProductosEntity::class, inversedBy: 'lineasPedido')]
     #[JoinColumn(name: 'idProducto', referencedColumnName: 'idProducto')]
     private ProductosEntity $producto;
 

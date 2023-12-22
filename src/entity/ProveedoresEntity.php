@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace app\Entity;
 
 use app\Repository\ProveedoresRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: ProveedoresRepository::class)]
@@ -37,6 +39,10 @@ class ProveedoresEntity
 
     #[Column(name: 'contacto', type: 'string', length: 100, nullable: true)]
     private ?string $contacto = null;
+
+    //Un proveedor tiene muchos pedidos(bidireccional)
+    #[OneToMany(targetEntity: PedidosEntity::class, mappedBy: 'proveedor')]
+    private ?Collection $pedidos;
 
     /**
      * Get the value of idProveedor
@@ -142,4 +148,19 @@ class ProveedoresEntity
         $this->contacto = $contacto;
     }
 
+    /**
+     * Get the value of pedidos
+     */
+    public function getPedidos(): ?Collection
+    {
+        return $this->pedidos;
+    }
+
+    /**
+     * Set the value of pedidos
+     */
+    public function setPedidos(?Collection $pedidos): void
+    {
+        $this->pedidos = $pedidos;
+    }
 }

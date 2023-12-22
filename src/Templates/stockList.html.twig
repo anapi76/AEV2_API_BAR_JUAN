@@ -10,8 +10,8 @@
         <h4>{{title1}}</h4>
         <table cellpadding="5">
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
+                <th>IdProducto</th>
+                <th>Nombre producto</th>
                 <th>Fecha</th>
                 <th>Cantidad</th>
             </tr>
@@ -24,8 +24,7 @@
             </tr>
         {% endfor %}
         <form action="" method="post">
-            <p>Introduce la fecha: <input type="date" name="fecha"></p>
-            {#<p>Introduce la hora: <input type="time" name="hora" step="0.001"></p>#}
+            <p>Introduce la fecha: <input type="date" name="fecha" value='{{now|date('Y-m-d')}}'></p>
             <p><input type="submit" value="Buscar"> </p>
         </form>
         </table>

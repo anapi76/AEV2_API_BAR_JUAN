@@ -8,28 +8,27 @@ use Doctrine\ORM\EntityRepository;
 
 class PedidosRepository extends EntityRepository
 {
-    public function pedidoJSON(PedidosEntity $pedido): mixed
+    public function pedidoJSON(PedidosEntity $pedido): ?array
     {
         if (is_null($pedido)) {
-            return null;
+            $pedido= null;
         } else {
             $estado = ($pedido->isEstado()) ? 'Creado' : 'Entregado';
             $pedidoJSON = array(
                 'PROVEEDOR' => $pedido->getProveedor()->getNombre(),
-                'FECHA' => ($pedido->getFecha())->format('d-m-Y'),
-                'HORA' => ($pedido->getFecha())->format('H:m:s'),
+                'FECHA' => ($pedido->getFecha())->format('d-m-Y H:i:s'),
                 'DETALLES' => $pedido->getDetalles(),
-                //'ESTADO' => $estado,
+                'ESTADO' => $estado,
                 'LINEAS DE PEDIDO' => $this->lineasPedidosJSON($pedido->getLineasPedido())
             );
             return $pedidoJSON;
         }
     }
 
-    public function lineasPedidosJSON(?Collection $lineasPedido):mixed
+    public function lineasPedidosJSON(?Collection $lineasPedido):?array
     {
         if (is_null($lineasPedido)) {
-            return null;
+            $json=null;
         } else {
             $json = array();
             foreach ($lineasPedido as $linea) {
@@ -44,19 +43,18 @@ class PedidosRepository extends EntityRepository
         }
     }
 
-    public function listarPedidosJSOn():mixed
+    public function listarPedidosJSOn():?array
     {
         $pedidos = $this->findAll();
         if (is_null($pedidos)) {
-            return null;
+            $json=null;
         } else {
             $json = array();
             foreach ($pedidos as $pedido) {
                 $estado = ($pedido->isEstado()) ? 'Creado' : 'Entregado';
                 $json[$pedido->getIdPedidos()] = array(
                     'PROVEEDOR' => $pedido->getProveedor()->getNombre(),
-                    'FECHA' => ($pedido->getFecha())->format('d-m-Y'),
-                    'HORA' => ($pedido->getFecha())->format('H:m:s'),
+                    'FECHA' => ($pedido->getFecha())->format('d-m-Y H:i:s'),
                     'DETALLES' => $pedido->getDetalles(),
                     'ESTADO' => $estado,
                     'LINEAS DE PEDIDO' => $this->lineasPedidosJSON($pedido->getLineasPedido())
@@ -71,7 +69,7 @@ class PedidosRepository extends EntityRepository
         if (empty($pedido) || is_null($pedido)) {
             return false;
         } else {
-            $entidad = $this->find($pedido->getIdPedidos());
+            $entidad = $this->find($pedido);
             if (empty($entidad))
                 return false;
             else {

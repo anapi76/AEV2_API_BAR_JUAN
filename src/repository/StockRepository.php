@@ -9,54 +9,47 @@ use Doctrine\ORM\EntityRepository;
 
 class StockRepository extends EntityRepository
 {
-    public function stock(): array
+    public function stock(): ?array
     {
         $productos = $this->findProductos();
-        foreach ($productos as $producto) {
-            $id = $producto->getIdProducto();
-            $data = $this->findBy(['producto' => $id], ['fecha' => 'DESC']);
-            $stock[] = $data[0];
+        if (!is_null($productos)) {
+            foreach ($productos as $producto) {
+                $data = $this->findBy(['producto' => $producto], ['fecha' => 'DESC']);
+                $stock[] = $data[0];
+            }
+        } else {
+            $stock = null;
         }
         return $stock;
     }
 
-   /*  public function stockFecha(DateTime $fecha): ?array
-    {
-        $productos = $this->findProductos();
-        //dump($fecha);
-        foreach ($productos as $producto) {
-            $id = $producto->getIdProducto();
-            $data = $this->findBy(['producto' => $id, 'fecha' => $fecha], ['fecha' => 'DESC']);
-            if (!empty($data)) {
-                $stock[] = $data[0];
-            } else {
-                $stock = null;
-            }
-        }
-        //dump($stock);
-        return $stock;
-    } */
-
-    public function stockFechaArray(DateTime $fecha):?array
+    public function stockFechaArray(DateTime $fecha): ?array
     {
         $entityManager = $this->getEntityManager();
         $fechaFin = $fecha->setTime(23, 59, 59);
         $stockRepository = $entityManager->getRepository(StockEntity::class);
-        $stocks = $stockRepository->findAll();
-        foreach ($stocks as $stock) {
-            if (($stock->getFecha()->format('d-m-Y') >= $fecha->format('d-m-Y')) && ($stock->getFecha()->format('d-m-Y') <= $fechaFin->format('d-m-Y'))) {
-                $stockDates[] = $stock;
+        $stockArray = $stockRepository->findAll();
+        if (!empty($stockArray)) {
+            foreach ($stockArray as $stock) {
+                if (($stock->getFecha()->format('d-m-Y') >= $fecha->format('d-m-Y')) && ($stock->getFecha()->format('d-m-Y') <= $fechaFin->format('d-m-Y'))) {
+                    $data[] = $stock;
+                }
             }
+        } else {
+            $data = null;
         }
-        //dump($stockDates);
-        return $stockDates;
+        //dump($data);
+        return $data;
     }
 
-    public function findProductos(): array
+    public function findProductos(): ?array
     {
         $entityManager = $this->getEntityManager();
         $productosRepository = $entityManager->getRepository(ProductosEntity::class);
         $productos = $productosRepository->findAll();
+        if (empty($productos)) {
+            $productos = null;
+        } 
         return $productos;
     }
 }

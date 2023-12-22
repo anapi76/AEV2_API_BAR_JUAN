@@ -14,5 +14,9 @@
   "/listarPedidos":{
     "controller":"PedidosController",
     "action": "listarPedidos"
+  },
+  "/crearComanda":{
+    "controller":"ComandasController",
+    "action": "crearComanda"
   }
 }

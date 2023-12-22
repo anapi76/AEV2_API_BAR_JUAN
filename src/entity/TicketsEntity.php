@@ -36,4 +36,77 @@ class TicketEntity
 
     #[Column(name: 'pagado', type: Types::BOOLEAN, options:['default'=>false])]
     private bool $pagado=false;
+
+    /**
+     * Get the value of idTicket
+     */
+    public function getIdTicket(): int
+    {
+        return $this->idTicket;
+    }
+
+    /**
+     * Get the value of comanda
+     */
+    public function getComanda(): ComandasEntity
+    {
+        return $this->comanda;
+    }
+
+    /**
+     * Set the value of comanda
+     */
+    public function setComanda(ComandasEntity $comanda): void
+    {
+        $this->comanda = $comanda;
+    }
+
+    /**
+     * Get the value of fecha
+     */
+    public function getFecha(): DateTime
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set the value of fecha
+     */
+    public function setFecha(DateTime $fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * Get the value of importe
+     */
+    public function getImporte(): float
+    {
+        return $this->importe;
+    }
+
+    /**
+     * Set the value of importe
+     */
+    public function setImporte(float $importe):void
+    {
+        $this->importe = $importe;
+
+    }
+
+    /**
+     * Get the value of pagado
+     */
+    public function isPagado(): bool
+    {
+        return $this->pagado;
+    }
+
+    /**
+     * Set the value of pagado
+     */
+    public function setPagado(bool $pagado):void
+    {
+        $this->pagado = $pagado;
+    }
 }

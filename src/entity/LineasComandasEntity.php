@@ -28,8 +28,8 @@ class LineasComandasEntity
     #[JoinColumn(name: 'idComanda', referencedColumnName: 'idComanda')]
     private ComandasEntity $comanda;
 
-    //Muchas lineas de comanda tinen un producto (unidireccional)
-    #[ManyToOne(targetEntity: ProductosEntity::class)]
+    //Muchas lineas de comanda tinen un producto (bidireccional)
+    #[ManyToOne(targetEntity: ProductosEntity::class, inversedBy: 'lineasComanda')]
     #[JoinColumn(name: 'idProducto', referencedColumnName: 'idProducto')]
     private ProductosEntity $producto;
 

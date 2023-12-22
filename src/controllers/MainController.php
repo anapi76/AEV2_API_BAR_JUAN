@@ -24,7 +24,7 @@ class MainController extends AbstractController
         );
     }
     
-    public function json400(?string $msg): mixed
+    public function json400($method,?string $msg): mixed
     {
         $status = 400;
         if (is_null($msg)) {

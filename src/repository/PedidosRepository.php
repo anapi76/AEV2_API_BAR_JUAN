@@ -19,13 +19,13 @@ class PedidosRepository extends EntityRepository
                 'FECHA' => ($pedido->getFecha())->format('d-m-Y H:i:s'),
                 'DETALLES' => $pedido->getDetalles(),
                 'ESTADO' => $estado,
-                'LINEAS DE PEDIDO' => $this->lineasPedidosJSON($pedido->getLineasPedido())
+                'LINEAS DE PEDIDO' => $this->lineasPedidoJSON($pedido->getLineasPedido())
             );
             return $pedidoJSON;
         }
     }
 
-    public function lineasPedidosJSON(?Collection $lineasPedido):?array
+    public function lineasPedidoJSON(?Collection $lineasPedido):?array
     {
         if (is_null($lineasPedido)) {
             $json=null;

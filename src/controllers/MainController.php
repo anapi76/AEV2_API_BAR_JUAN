@@ -9,7 +9,6 @@ use app\Core\AbstractController;
 //-- Clase que se encarga de devolver los datos de la página main
 class MainController extends AbstractController
 {
-
     //-- Llamamos al método que nos devuelve todos los datos
     public function main(): void
     {

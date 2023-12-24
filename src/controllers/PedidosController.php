@@ -72,7 +72,7 @@ class PedidosController extends AbstractController
                     }
                 } else {
                     $main = new MainController();
-                    $msg = 'No se ha creado el pedido, no se ha introducido ninguna linea de pedido. ';
+                    $msg = 'No se ha creado el pedido, porque no se ha introducido ninguna linea de pedido. ';
                     echo $main->json400(null,$msg);
                 }
             } else {

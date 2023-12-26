@@ -32,7 +32,7 @@ class ComandasEntity
     #[JoinColumn(name: 'idMesa', referencedColumnName: 'idMesa')]
     private MesaEntity $mesa;
 
-    #[Column(name: 'fecha', type: Types::DATE_MUTABLE)]
+    #[Column(name: 'fecha', type: 'datetime')]
     private DateTime $fecha;
 
     #[Column(name: 'comensales', type: 'integer')]

@@ -18,5 +18,13 @@
   "/crearComanda":{
     "controller":"ComandasController",
     "action": "crearComanda"
+  },
+  "/detalleComanda":{
+    "controller":"ComandasController",
+    "action": "detalleComanda"
+  },
+  "/entregadaLineaComanda":{
+    "controller":"ComandasController",
+    "action": "entregadaLineaComanda"
   }
 }

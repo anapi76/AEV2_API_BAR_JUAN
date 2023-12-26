@@ -12,14 +12,17 @@ use DateTime;
 
 class StockController extends AbstractController
 {
+    //creo una instancia del EntityManager
     private EntityManager $em;
 
+    //Inicializo el EntityManager en el constructor
     public function __construct()
     {
         $this->em = new EntityManager();
         parent::__construct();
     }
 
+    //Método que lista la tabla stock, por la última fecha o por una fecha que le damos
     public function stockList():void
     {
         $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);

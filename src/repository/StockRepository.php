@@ -49,7 +49,45 @@ class StockRepository extends EntityRepository
         $productos = $productosRepository->findAll();
         if (empty($productos)) {
             $productos = null;
-        } 
+        }
         return $productos;
+    }
+
+    public function stockProducto($producto): StockEntity
+    {
+        $data = $this->findBy(['producto' => $producto], ['fecha' => 'DESC']);
+        if (!is_null($producto)) {
+            $stock = $data[0];
+        } else {
+            $stock = null;
+        }
+        return $stock;
+    }
+
+    public function crearStock($producto, $cantidad)
+    {
+        $newStock = new StockEntity();
+        $newStock->setFecha(new DateTime);
+        $newStock->setProducto($producto);
+        $newStock->setCantidad($cantidad);
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($newStock);
+        $entityManager->flush($newStock);
+        return $newStock;
+
+    }
+
+    public function testInsert(StockEntity $stock): bool
+    {
+        if (empty($stock) || is_null($stock)) {
+            return false;
+        } else {
+            $entidad = $this->find($stock);
+            if (empty($entidad))
+                return false;
+            else {
+                return true;
+            }
+        }
     }
 }

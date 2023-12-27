@@ -11,6 +11,7 @@ use app\Entity\ComandasEntity;
 use app\Entity\LineasComandasEntity;
 use app\Entity\MesaEntity;
 use app\Entity\ProductosEntity;
+use app\Entity\StockEntity;
 use DateTime;
 
 class ComandasController extends AbstractController
@@ -116,8 +117,8 @@ class ComandasController extends AbstractController
                             $comandaRepository = $this->em->getEntityManager()->getRepository(ComandasEntity::class);
                             //Compruebo que la comanda se ha insertado correctamente y lo muestro por pantalla, si no se ha podido insertar saltará un mensaje de error
                             if ($comandaRepository->testInsert($comanda)) {
-                                $msg='Se ha insertado la comanda con Id: '.$comanda->getIdComanda();
-                                echo json_encode($msg,http_response_code(201));
+                                $msg = 'Se ha insertado la comanda con Id: ' . $comanda->getIdComanda();
+                                echo json_encode($msg, http_response_code(201));
                             } else {
                                 $msg = 'No se ha podido insertar la comanda. ';
                                 echo $this->main->jsonResponse($method, $msg, 500);
@@ -148,90 +149,171 @@ class ComandasController extends AbstractController
         $jsonData = file_get_contents('php://input');
         //Decodificamos el json y lo metemos en un array
         $data = json_decode($jsonData, true);
-        //Instancio el repositorio de comandas para buscar la comanda que vamos a actualizar
-        $comandaRepository = $this->em->getEntityManager()->getRepository(ComandasEntity::class);
-        $comanda = $comandaRepository->find(intval($idComanda));
-        $cont = 0;
-        //Si la comanda no es null empezará la actualización sino, lanzará un mensaje de error
-        if (!is_null($comanda)) {
-            if (isset($data['fecha']) && !empty($data['fecha'])) {
-                $fecha = new DateTime($data['fecha']);
-                $comanda->setFecha($fecha);
-                $cont++;
-            }
-            if (isset($data['mesa']) && !empty($data['mesa'])) {
-                $mesa = $this->findMesa($data['mesa']);
-            } else {
-                $mesa = $comanda->getMesa();
-            }
-            if (isset($data['comensales']) && !empty($data['comensales'])) {
-                if ($data['comensales'] > $mesa->getComensales()) {
-                    $msg = 'Los comensales no caben en la mesa seleccionada. ';
-                    echo $this->main->jsonResponse($method, $msg, 400);
-                } else {
-                    //Si los comensales caben en la mesa, introduzco la mesa y el número
-                    $comanda->setMesa($mesa);
-                    $comanda->setComensales(intval($data['comensales']));
+        if (!is_null($data)) {
+            //Instancio el repositorio de comandas para buscar la comanda que vamos a actualizar
+            $comandaRepository = $this->em->getEntityManager()->getRepository(ComandasEntity::class);
+            $comanda = $comandaRepository->find(intval($idComanda));
+            //Si la comanda no es null empezará la actualización sino, lanzará un mensaje de error
+            if (!is_null($comanda)) {
+                $cont = 0;
+                if (isset($data['fecha']) && !empty($data['fecha'])) {
+                    $fecha = new DateTime($data['fecha']);
+                    $comanda->setFecha($fecha);
                     $cont++;
-                    if (isset($data['detalles']) && !empty($data['detalles'])) {
-                        $comanda->setDetalles($data['detalles']);
+                }
+                if (isset($data['mesa']) && !empty($data['mesa'])) {
+                    $mesa = $this->findMesa($data['mesa']);
+                } else {
+                    $mesa = $comanda->getMesa();
+                }
+                if (isset($data['comensales']) && !empty($data['comensales'])) {
+                    if ($data['comensales'] > $mesa->getComensales()) {
+                        $msg = 'Los comensales no caben en la mesa seleccionada. ';
+                        echo $this->main->jsonResponse($method, $msg, 400);
+                    } else {
+                        //Si los comensales caben en la mesa, introduzco la mesa y el número
+                        $comanda->setMesa($mesa);
+                        $comanda->setComensales(intval($data['comensales']));
                         $cont++;
-                    }
-                    $this->em->getEntityManager()->persist($comanda);
-                    if (isset($data["lineas"]) && !empty($data["lineas"])) {
-                        $lineas = $data["lineas"];
-                        //Recorro las lineas de comanda, para comprobar si la linea no está vacía
-                        foreach ($lineas as $index => $linea) {
-                            if (isset($linea) && !empty($linea)) {
-                                //Asigno el indice 0 para crear una nueva línea
-                                if ($index == 0) {
-                                    //Creo una nueva instancia de una linea
-                                    $lineaComanda = new LineasComandasEntity();
-                                    //Añado la lineaComanda al arrayCollection de la comanda
-                                    $comanda->getLineasComanda()->add($lineaComanda);
-                                    //Introduzco la comanda que he persistido
-                                    $lineaComanda->setComanda($comanda);
-                                } else {
-                                    $lineaComandaRepository = $this->em->getEntityManager()->getRepository(LineasComandasEntity::class);
-                                    //Busco la lineaComanda que voy a actualizar
-                                    $lineaComanda = $lineaComandaRepository->find($index);
+                        if (isset($data['detalles']) && !empty($data['detalles'])) {
+                            $comanda->setDetalles($data['detalles']);
+                            $cont++;
+                        }
+                        $this->em->getEntityManager()->persist($comanda);
+                        if (isset($data["lineas"]) && !empty($data["lineas"])) {
+                            $lineas = $data["lineas"];
+                            //Recorro las lineas de comanda, para comprobar si la linea no está vacía
+                            foreach ($lineas as $index => $linea) {
+                                if (isset($linea) && !empty($linea)) {
+                                    //Asigno el indice 0 para crear una nueva línea
+                                    if ($index == 0) {
+                                        //Creo una nueva instancia de una linea
+                                        $lineaComanda = new LineasComandasEntity();
+                                        //Añado la lineaComanda al arrayCollection de la comanda
+                                        $comanda->getLineasComanda()->add($lineaComanda);
+                                        //Introduzco la comanda que he persistido
+                                        $lineaComanda->setComanda($comanda);
+                                    } else {
+                                        $lineaComandaRepository = $this->em->getEntityManager()->getRepository(LineasComandasEntity::class);
+                                        //Busco la lineaComanda que voy a actualizar
+                                        $lineaComanda = $lineaComandaRepository->find($index);
+                                    }
+                                    //Si el producto está declarado y no está vacío, actualizo
+                                    if (isset($linea['producto']) && !empty($linea['producto'])) {
+                                        //Busco el objeto producto y lo introduzco en la linea
+                                        $producto = $this->findProducto($linea['producto']);
+                                        $lineaComanda->setProducto($producto);
+                                        $cont++;
+                                    }
+                                    //Si la cantidad está declarada y no está vacía, actualizo
+                                    if (isset($linea['cantidad']) && !empty($linea['cantidad'])) {
+                                        $lineaComanda->setCantidad(floatval($linea['cantidad']));
+                                        $cont++;
+                                    }
+                                    //persisto lineaComanda
+                                    $this->em->getEntityManager()->persist($lineaComanda);
                                 }
-                                //Si el producto está declarado y no está vacío, actualizo
-                                if (isset($linea['producto']) && !empty($linea['producto'])) {
-                                    //Busco el objeto producto y lo introduzco en la linea
-                                    $producto = $this->findProducto($linea['producto']);
-                                    $lineaComanda->setProducto($producto);
-                                    $cont++;
-                                }
-                                //Si la cantidad está declarada y no está vacía, actualizo
-                                if (isset($linea['cantidad']) && !empty($linea['cantidad'])) {
-                                    $lineaComanda->setCantidad(floatval($linea['cantidad']));
-                                    $cont++;
-                                }
-                                //persisto lineaComanda
-                                $this->em->getEntityManager()->persist($lineaComanda);
                             }
                         }
-                    }
-                    //Si el contador que he inicializado es mayor que 0, hago un flush
-                    if ($cont > 0) {
-                        $this->em->getEntityManager()->flush();
-                        //Compruebo que la comanda se ha insertado correctamente y lo muestro por pantalla, si no se ha podido insertar saltará un mensaje de error
-                        if ($comandaRepository->testInsert($comanda)) {
-                            $msg='Se ha actualizado la comanda con Id: '.$comanda->getIdComanda();
-                            echo json_encode($msg,http_response_code(201));
+                        //Si el contador que he inicializado es mayor que 0, hago un flush
+                        if ($cont > 0) {
+                            $this->em->getEntityManager()->flush();
+                            //Compruebo que la comanda se ha insertado correctamente y lo muestro por pantalla, si no se ha podido insertar saltará un mensaje de error
+                            if ($comandaRepository->testInsert($comanda)) {
+                                $msg = 'Se ha actualizado la comanda con Id: ' . $comanda->getIdComanda();
+                                echo json_encode($msg, http_response_code(201));
+                            } else {
+                                $msg = 'No se ha podido actualizar la comanda. ';
+                                echo $this->main->jsonResponse($method, $msg, 500);
+                            }
                         } else {
-                            $msg = 'No se ha podido actualizar la comanda. ';
-                            echo $this->main->jsonResponse($method, $msg, 500);
+                            $msg = 'No se ha actualizado ningun campo de la comanda. ';
+                            echo $this->main->jsonResponse($method, $msg, 400);
                         }
-                    } else {
-                        $msg = 'No se ha actualizado ningun campo de la comanda. ';
-                        echo $this->main->jsonResponse($method, $msg, 400);
                     }
                 }
+            } else {
+                $msg = 'La comanda no existe. ';
+                echo $this->main->jsonResponse($method, $msg, 400);
             }
         } else {
-            $msg = 'La comanda no existe. ';
+            $msg = 'Error al decodificar el archivo json. ';
+            echo $this->main->jsonResponse($method, $msg, 500);
+        }
+    }
+
+    public function entregadaLineaComanda(string $idComanda)
+    {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method === 'PATCH') {
+            //Obtenemos los datos de la solicitud post
+            $jsonData = file_get_contents('php://input');
+            //Decodificamos el json y lo metemos en un array
+            $data = json_decode($jsonData, true);
+            if (!is_null($data)) {
+                $comandaRepository = $this->em->getEntityManager()->getRepository(ComandasEntity::class);
+                $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);
+                $comanda = $comandaRepository->find(intval($idComanda));
+                if (!is_null($comanda)) {
+                    if (isset($data) && !empty($data)) {
+                        //Recorro las lineas de comanda, para comprobar si la linea no está vacía
+                        $test = true;
+                        foreach ($data as $index => $linea) {
+                            if (isset($linea) && !empty($linea)) {
+                                $lineaComandaRepository = $this->em->getEntityManager()->getRepository(LineasComandasEntity::class);
+                                //Busco la lineaComanda que voy a actualizar
+                                $lineaComanda = $lineaComandaRepository->find($index);
+                                //Cambio el estado de linea a entregado persisto y flusheo
+                                $lineaComanda->setEntregado(true);
+                                $this->em->getEntityManager()->persist($lineaComanda);
+                                $this->em->getEntityManager()->flush();
+                                //Busco el producto para actualizar el stock
+                                $producto = $this->findProducto($linea['producto']);
+                                $cantidad = intval($linea['cantidad']);
+                                //llamo al repositorio de stock para buscar el último stock del producto
+                                $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);
+                                $stock = $stockRepository->stockProducto($producto);
+                                //Creo un nuevo stock con la cantidad actualizada
+                                $nuevaCantidad = $stock->getCantidad() - $cantidad;
+                                $newStock = $stockRepository->crearStock($producto, $nuevaCantidad);
+                                //Compruebo que se han actualizado el stock de todos los productos
+                                if (!($stockRepository->testInsert($newStock))) {
+                                    $test = false;
+                                }
+                            }
+                        }
+        
+                        if ($test == true) {
+                            $msg = 'Se han creado nuevos stocks';
+                            echo json_encode($msg, http_response_code(201));
+                        } else {
+                            $msg = 'No se ha podido crear el nuevo stock. ';
+                            echo $this->main->jsonResponse($method, $msg, 500);
+                        }
+                    }
+                    //Compruebo si todas las lineasComanda de la comanda están entregada y cambio el estado de la comanda
+                    $lineas = $comanda->getLineasComanda()[0];
+                    $entregado = true;
+                    foreach ($lineas as $linea) {
+                        if ($linea->isEntregado() == false) {
+                            $entregado = false;
+                        }
+                    }
+                    if ($entregado) {
+                        $comanda->setEstado(false);
+                        $this->em->getEntityManager()->persist($lineaComanda);
+                        $this->em->getEntityManager()->flush();
+                    }
+                } else {
+                    $msg = 'La comanda no existe. ';
+                    echo $this->main->jsonResponse($method, $msg, 400);
+                }
+            } else {
+                $msg = 'Error al decodificar el archivo json. ';
+                echo $this->main->jsonResponse($method, $msg, 500);
+            }
+        } else {
+            $msg = 'El metodo ' . $method . ' no es valido para esta peticion. ';
             echo $this->main->jsonResponse($method, $msg, 400);
         }
     }

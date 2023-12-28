@@ -23,13 +23,13 @@ class MainController extends AbstractController
         );
     }
     
+    //método que devuelve un mensaje de error y el estado
     public function jsonResponse(?string $method, ?string $msg, ?int $status):void
     {
         //Establecemos el código de respuesta si no lo hemos recibido por defecto en 400
         if(is_null($status)){
             $status = 400;
         }
-
         if(is_null($msg)){
             $result = 'Petición inválida realizada: '.date("d-m-Y-H-i-s");
         }else{
@@ -50,21 +50,4 @@ class MainController extends AbstractController
 
         echo $json;
     }
-
-    //Método que captura los errores y saca por pantalla el error
-    /* public function json($method,?string $msg): mixed
-    {
-        $status = 400;
-        if (is_null($msg)) {
-            $result = 'Peticion invalida: ' . date('d-m-y h:i:s');
-        } else {
-            $result = $msg . date('d-m-Y H:i:s');
-        }
-        $jsonArray = array(
-            'status' => $status,
-            'result' => $result
-        );
-        $json = json_encode($jsonArray, http_response_code($status));
-        return $json;
-    } */
 }

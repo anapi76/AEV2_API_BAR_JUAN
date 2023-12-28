@@ -26,6 +26,7 @@ class StockController extends AbstractController
     public function stockList():void
     {
         $stockRepository = $this->em->getEntityManager()->getRepository(StockEntity::class);
+        //Si fecha no está declarado o está vacío, listamos el último stock de cada producto, sino listamos el último stock de cada producto con la fecha que hemos recibido
         if (!isset($_POST['fecha']) || empty($_POST['fecha'])) {
             $stock = $stockRepository->stock();
         } else {

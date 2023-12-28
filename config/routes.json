@@ -15,16 +15,12 @@
     "controller":"PedidosController",
     "action": "listarPedidos"
   },
-  "/crearComanda":{
+  "/comanda":{
     "controller":"ComandasController",
-    "action": "crearComanda"
-  },
-  "/detalleComanda":{
-    "controller":"ComandasController",
-    "action": "detalleComanda"
+    "action": "insertarComanda"
   },
   "/entregadaLineaComanda":{
-    "controller":"ComandasController",
+    "controller":"LineasComandasController",
     "action": "entregadaLineaComanda"
   },
   "/ticket":{

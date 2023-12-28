@@ -8,21 +8,7 @@ use Doctrine\Common\Collections\Collection;
 
 class TicketsRepository extends EntityRepository
 {
-    //Método que comprueba si la comanda se ha insertado correctamente en la BD
-    public function testInsert(?TicketsEntity $ticket): bool
-    {
-        if (empty($ticket) || is_null($ticket)) {
-            return false;
-        } else {
-            $entidad = $this->find($ticket);
-            if (empty($entidad))
-                return false;
-            else {
-                return true;
-            }
-        }
-    }
-
+    //Método para sacar en formato json un ticket
     public function ticketJSON(TicketsEntity $ticket): ?array
     {
         if (is_null($ticket)) {
@@ -54,6 +40,21 @@ class TicketsRepository extends EntityRepository
                 );
             }
             return $json;
+        }
+    }
+
+    //Método que comprueba si la comanda se ha insertado correctamente en la BD
+    public function testInsert(?TicketsEntity $ticket): bool
+    {
+        if (empty($ticket) || is_null($ticket)) {
+            return false;
+        } else {
+            $entidad = $this->find($ticket);
+            if (empty($entidad))
+                return false;
+            else {
+                return true;
+            }
         }
     }
 }

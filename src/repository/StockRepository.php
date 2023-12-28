@@ -9,13 +9,16 @@ use Doctrine\ORM\EntityRepository;
 
 class StockRepository extends EntityRepository
 {
+    //Método que devuelve un array con el stock de todos los productos cuya cantidad sea mayor que cero, con la fecha más reciente
     public function stock(): ?array
     {
         $productos = $this->findProductos();
         if (!is_null($productos)) {
             foreach ($productos as $producto) {
                 $data = $this->findBy(['producto' => $producto], ['fecha' => 'DESC']);
-                $stock[] = $data[0];
+                if ($data[0]->getCantidad() > 0) {
+                    $stock[] = $data[0];
+                }
             }
         } else {
             $stock = null;
@@ -23,6 +26,7 @@ class StockRepository extends EntityRepository
         return $stock;
     }
 
+    //Método que devuelve un array con el stock de todos los productos cuya cantidad sea mayor que cero, con la fecha que le decimos
     public function stockFechaArray(DateTime $fecha): ?array
     {
         $entityManager = $this->getEntityManager();
@@ -32,16 +36,18 @@ class StockRepository extends EntityRepository
         if (!empty($stockArray)) {
             foreach ($stockArray as $stock) {
                 if (($stock->getFecha()->format('d-m-Y') >= $fecha->format('d-m-Y')) && ($stock->getFecha()->format('d-m-Y') <= $fechaFin->format('d-m-Y'))) {
-                    $data[] = $stock;
+                    if ($stock->getCantidad() > 0) {
+                        $data[] = $stock;
+                    }
                 }
             }
         } else {
             $data = null;
         }
-        //dump($data);
         return $data;
     }
 
+    //Método que devuelve un array con todos los productos
     public function findProductos(): ?array
     {
         $entityManager = $this->getEntityManager();
@@ -53,7 +59,8 @@ class StockRepository extends EntityRepository
         return $productos;
     }
 
-    public function stockProducto($producto): StockEntity
+    //Método que devuelve el stock con fecha más reciente del producto que le pasamos
+    public function stockProducto(ProductosEntity $producto): StockEntity
     {
         $data = $this->findBy(['producto' => $producto], ['fecha' => 'DESC']);
         if (!is_null($producto)) {
@@ -64,30 +71,22 @@ class StockRepository extends EntityRepository
         return $stock;
     }
 
-    public function crearStock($producto, $cantidad)
+    //Método para persistir y hacer flush del nuevo stock
+    public function crearStock(?StockEntity $newStock): bool
     {
-        $newStock = new StockEntity();
-        $newStock->setFecha(new DateTime);
-        $newStock->setProducto($producto);
-        $newStock->setCantidad($cantidad);
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($newStock);
-        $entityManager->flush($newStock);
-        return $newStock;
-
-    }
-
-    public function testInsert(StockEntity $stock): bool
-    {
-        if (empty($stock) || is_null($stock)) {
+        if(empty($newStock) || is_null($newStock)){
             return false;
-        } else {
-            $entidad = $this->find($stock);
+        }
+        else{
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($newStock);
+            $entityManager->flush();
+            $entidad = $this->find($newStock);
             if (empty($entidad))
                 return false;
             else {
                 return true;
             }
         }
-    }
+    } 
 }

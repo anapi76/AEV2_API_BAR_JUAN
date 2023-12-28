@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace app\Entity;
 
-use app\Repository\TicketRepository;
+use app\Repository\TicketsRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 
-#[Entity(repositoryClass: TicketRepository::class)]
+#[Entity(repositoryClass: TicketsRepository::class)]
 #[Table(name: 'tickets')]
-class TicketEntity
+class TicketsEntity
 {
     #[Id]
     #[GeneratedValue]
@@ -28,7 +28,7 @@ class TicketEntity
     #[JoinColumn(name: 'idComanda', referencedColumnName: 'idComanda')]
     private ComandasEntity $comanda;
 
-    #[Column(name: 'fecha', type: Types::DATE_MUTABLE)]
+    #[Column(name: 'fecha', type: 'datetime')]
     private DateTime $fecha;
 
     #[column(name: 'importe', type: 'decimal', precision: 10, scale: 2)]

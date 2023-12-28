@@ -26,5 +26,9 @@
   "/entregadaLineaComanda":{
     "controller":"ComandasController",
     "action": "entregadaLineaComanda"
+  },
+  "/ticket":{
+    "controller":"TicketsController",
+    "action": "crearTicket"
   }
 }

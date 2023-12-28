@@ -44,6 +44,10 @@ class ComandasEntity
     #[Column(name: 'estado', type: Types::BOOLEAN, options: ['default' => true])]
     private bool $estado = true;
 
+    //Una comanda tiene muchos tickets(bidireccional)
+    #[OneToMany(targetEntity: TicketsEntity::class, mappedBy: 'comanda')]
+    private ?Collection $tickets;
+
     //Una comanda tiene muchas lineas de comanda(bidireccional)
     #[OneToMany(targetEntity: LineasComandasEntity::class, mappedBy: 'comanda')]
     private ?Collection $lineasComanda;
@@ -51,6 +55,7 @@ class ComandasEntity
     public function __construct()
     {
         $this->lineasComanda = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     /**
@@ -155,5 +160,22 @@ class ComandasEntity
     public function setLineasComanda(?Collection $lineasComanda): void
     {
         $this->lineasComanda = $lineasComanda;
+    }
+
+    /**
+     * Get the value of tickets
+     */
+    public function getTickets(): ?Collection
+    {
+        return $this->tickets;
+    }
+
+    /**
+     * Set the value of tickets
+     */
+    public function setTickets(?Collection $tickets):void
+    {
+        $this->tickets = $tickets;
+
     }
 }

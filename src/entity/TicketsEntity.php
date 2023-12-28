@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: TicketsRepository::class)]
@@ -24,7 +25,7 @@ class TicketsEntity
     #[Column(name: 'idTicket', type: 'integer')]
     private int $idTicket;
 
-    #[OneToOne(targetEntity: ComandasEntity::class)]
+    #[ManyToOne(targetEntity: ComandasEntity::class, inversedBy:'tickets')]
     #[JoinColumn(name: 'idComanda', referencedColumnName: 'idComanda')]
     private ComandasEntity $comanda;
 

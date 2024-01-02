@@ -15,11 +15,5 @@ $dotenv->load();
 $routes = new RouteCollection();
 //Creamos un objeto que contenga la ruta que hemos recibido desde el navegador.
 $request = new Request();
-//Lanzo un bloque try catch para capturar el error en caso de que no se pueda conectar a la BD
-try {
-    //Ahora creamos un objeto que se encarga de redirigir al controller que corresponda la aplicación
-    $dispatcher = new Dispatcher($routes, $request);
-} catch (Throwable $e) {
-    $main = new MainController();
-    echo $main->jsonResponse(null, 'Error de conexion a la base de datos', 500);
-}
+//Ahora creamos un objeto que se encarga de redirigir al controller que corresponda la aplicación
+$dispatcher = new Dispatcher($routes, $request);

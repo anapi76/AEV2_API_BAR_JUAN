@@ -12,6 +12,7 @@ use app\Entity\LineasComandasEntity;
 use app\Entity\MesaEntity;
 use app\Entity\ProductosEntity;
 use DateTime;
+use Exception;
 
 class ComandasController extends AbstractController
 {
@@ -57,6 +58,7 @@ class ComandasController extends AbstractController
     //Método para crear una comanda nueva
     public function crearComanda(string $method): void
     {
+        try {
             //Obtenemos los datos de la solicitud post
             $jsonData = file_get_contents('php://input');
             //Decodificamos el json y lo metemos en un array
@@ -144,11 +146,16 @@ class ComandasController extends AbstractController
                 $msg = 'Error al decodificar el archivo json. ';
                 echo $this->main->jsonResponse($method, $msg, 500);
             }
+        } catch (Exception $e) {
+            $msg = 'Error del servidor: '.$e->getMessage();
+            echo $this->main->jsonResponse($method, $msg, 500);
+        }
     }
 
     //Método para actualizar una comanda
     public function actualizarComanda(string $method, string $idComanda): void
     {
+        try {
             //Obtenemos los datos de la solicitud post
             $jsonData = file_get_contents('php://input');
             //Decodificamos el json y lo metemos en un array
@@ -259,10 +266,12 @@ class ComandasController extends AbstractController
                 $msg = 'Error al decodificar el archivo json. ';
                 echo $this->main->jsonResponse($method, $msg, 500);
             }
-        
+        } catch (Exception $e) {
+            $msg = 'Error del servidor. '.$e->getMessage();
+            echo $this->main->jsonResponse($method, $msg, 500);
+        }
     }
 }
-
 /* json para crear la comanda en postman
 {
     "fecha":"27/12/2023 12:00:00",

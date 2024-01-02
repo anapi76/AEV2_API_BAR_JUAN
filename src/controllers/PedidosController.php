@@ -94,15 +94,15 @@ class PedidosController extends AbstractController
                         }
                     } else {
                         $msg = 'No se ha creado el pedido, porque no se ha introducido ninguna linea de pedido. ';
-                        echo $this->main->jsonResponse(null, $msg,400);
+                        echo $this->main->jsonResponse(null, $msg, 400);
                     }
                 } else {
                     $msg = 'No se ha creado el pedido, porque no se ha introducido ninguna linea de pedido. ';
-                    echo $this->main->jsonResponse(null, $msg,400);
+                    echo $this->main->jsonResponse(null, $msg, 400);
                 }
             } else {
                 $msg = 'No se ha introducido el proveedor. ';
-                echo $this->main->jsonResponse(null, $msg,400);
+                echo $this->main->jsonResponse(null, $msg, 400);
             }
         } else {
             //Saco todos los proveedores y todos los productos para pasárselos al formulario

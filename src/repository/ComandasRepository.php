@@ -3,7 +3,6 @@
 namespace app\Repository;
 
 use app\Entity\ComandasEntity;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 
 class ComandasRepository  extends EntityRepository

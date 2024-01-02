@@ -10,6 +10,7 @@ use app\Core\EntityManager;
 use app\Entity\ComandasEntity;
 use app\Entity\TicketsEntity;
 use DateTime;
+use PDOException;
 
 class TicketsController extends AbstractController
 {

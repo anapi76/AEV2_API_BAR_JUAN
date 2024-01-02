@@ -11,6 +11,7 @@ use app\Entity\LineasComandasEntity;
 use app\Entity\ProductosEntity;
 use app\Entity\StockEntity;
 use DateTime;
+use PDOException;
 
 class LineasComandasController extends AbstractController
 {

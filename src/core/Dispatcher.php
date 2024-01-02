@@ -21,11 +21,10 @@ class Dispatcher
     private array $routeList;
     private IRequest $currentRequest;
 
-    public function __construct(/* Container $container, */ IRoute $routeCollection, IRequest $request)
+    public function __construct( IRoute $routeCollection, IRequest $request)
     {
         $this->routeList = $routeCollection->getRoutes();
         $this->currentRequest = $request;
-        //$this->container = $container;
         $this->dispatch();
     }
 
@@ -54,8 +53,6 @@ class Dispatcher
         }
         //Instanciamos el controlador que toca
         $controller = new $controllerClass();
-        //No instanciamos el controlador, si no usamos la Inyección de dependencias mediante el contenedor para instanciarlo
-        //$controller = $this->container->get($controllerClass);
  
         //Ahora ejecutamos el método asociado a la ruta y le pasamos los parámetros.
         $controller->$action(...$params);

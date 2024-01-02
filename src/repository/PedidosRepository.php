@@ -48,6 +48,7 @@ class PedidosRepository extends EntityRepository
     //Función que lista todos los pedidos en formato json
     public function listarPedidosJSOn():?array
     {
+      
         $pedidos = $this->findAll();
         if (is_null($pedidos)) {
             $json=null;
@@ -65,6 +66,7 @@ class PedidosRepository extends EntityRepository
             }
             return $json;
         }
+    
     }
 
     //Función que comprueba si el pedido se ha insertado correctamente en la BD

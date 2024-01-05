@@ -64,7 +64,6 @@ class TicketsController extends AbstractController
                             if ($ticketRepository->testInsert($ticket)) {
                                 $ticketJSON = $ticketRepository->ticketJSON($ticket);
                                 echo json_encode($ticketJSON, JSON_PRETTY_PRINT);
-                                dump($comanda);
                             } else {
                                 $msg = 'No se ha podido crear el ticket. ';
                                 echo $this->main->jsonResponse($method, $msg, 500);

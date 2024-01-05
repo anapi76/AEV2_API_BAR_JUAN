@@ -26,7 +26,7 @@ class StockRepository extends EntityRepository
         return $stock;
     }
 
-    //Método que devuelve un array con el stock de todos los productos cuya cantidad sea mayor que cero, con la fecha que le decimos
+    //Método que devuelve un array con el stock de todos los productos cuya cantidad sea mayor que cero, con la fecha que le decimos, si la fecha que le decimos no existe devolverá null
     public function stockFechaArray(DateTime $fecha): ?array
     {
         $entityManager = $this->getEntityManager();
@@ -34,6 +34,7 @@ class StockRepository extends EntityRepository
         $stockRepository = $entityManager->getRepository(StockEntity::class);
         $stockArray = $stockRepository->findAll();
         if (!empty($stockArray)) {
+            $data = [];
             foreach ($stockArray as $stock) {
                 if (($stock->getFecha()->format('d-m-Y') >= $fecha->format('d-m-Y')) && ($stock->getFecha()->format('d-m-Y') <= $fechaFin->format('d-m-Y'))) {
                     if ($stock->getCantidad() > 0) {
@@ -74,10 +75,9 @@ class StockRepository extends EntityRepository
     //Método para persistir y hacer flush del nuevo stock
     public function crearStock(?StockEntity $newStock): bool
     {
-        if(empty($newStock) || is_null($newStock)){
+        if (empty($newStock) || is_null($newStock)) {
             return false;
-        }
-        else{
+        } else {
             $entityManager = $this->getEntityManager();
             $entityManager->persist($newStock);
             $entityManager->flush();
@@ -88,5 +88,5 @@ class StockRepository extends EntityRepository
                 return true;
             }
         }
-    } 
+    }
 }

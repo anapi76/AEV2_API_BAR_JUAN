@@ -66,12 +66,11 @@ class ComandasController extends AbstractController
             //Si el array no es null creamos la comanda, sino lanzaremos un error
             if (!is_null($data)) {
                 //Comprobamos que los datos que no pueden ser null para crear la comanda, existen y no están vacíos, sino lanzará un mensaje de error
-                if (isset($data["fecha"]) && !empty($data["fecha"]) && isset($data["mesa"]) && !empty($data["mesa"]) && isset($data["comensales"]) && !empty($data["comensales"])) {
+                if (isset($data["mesa"]) && !empty($data["mesa"]) && isset($data["comensales"]) && !empty($data["comensales"])) {
                     //Creo una instancia de ComandasEntity
                     $comanda = new ComandasEntity();
                     //Introduzco la fecha actual para crear la nueva comanda
-                    $fechaFormat = str_replace("/", "-", $data["fecha"]);
-                    $fecha = new DateTime($fechaFormat);
+                    $fecha = new DateTime();
                     $comanda->setFecha($fecha);
                     //Busco la mesa con el nombre que hemos recibido y la introduzco
                     $mesaRepository = $this->em->getEntityManager()->getRepository(MesaEntity::class);
@@ -147,7 +146,7 @@ class ComandasController extends AbstractController
                 echo $this->main->jsonResponse($method, $msg, 500);
             }
         } catch (Exception $e) {
-            $msg = 'Error del servidor: '.$e->getMessage();
+            $msg = 'Error del servidor: ' . $e->getMessage();
             echo $this->main->jsonResponse($method, $msg, 500);
         }
     }
@@ -168,14 +167,11 @@ class ComandasController extends AbstractController
                 if (!is_null($comanda)) {
                     //Inicializo un contador para comprobar si se ha actualizado algún camopo
                     $cont = 0;
-                    //Comprebo los campos que están declarados y no están vacíos para actualizar la comanda
-                    if (isset($data['fecha']) && !empty($data['fecha'])) {
-                        //reemplazo la / por - para convertir la fecha en un formato de string apto para un objeto dateTime
-                        $fechaFormat = str_replace("/", "-", $data["fecha"]);
-                        $fecha = new DateTime($fechaFormat);
-                        $comanda->setFecha($fecha);
-                        $cont++;
-                    }
+                    //Actualizo la fecha de la comanda
+                    $fecha = new DateTime();
+                    $comanda->setFecha($fecha);
+                    $cont++;
+                    //Compruebo los campos que están declarados y no están vacíos para actualizar la comanda
                     //Si mesa no se ha actualizado, saco el objeto mesa de la comanda a actualizar, para comprobar si caben los comensales, en caso de que se hayan modificado, si se ha actualizado la modifico en la comanda
                     if (isset($data['mesa']) && !empty($data['mesa'])) {
                         $mesaRepository = $this->em->getEntityManager()->getRepository(MesaEntity::class);
@@ -267,14 +263,13 @@ class ComandasController extends AbstractController
                 echo $this->main->jsonResponse($method, $msg, 500);
             }
         } catch (Exception $e) {
-            $msg = 'Error del servidor. '.$e->getMessage();
+            $msg = 'Error del servidor. ' . $e->getMessage();
             echo $this->main->jsonResponse($method, $msg, 500);
         }
     }
 }
 /* json para crear la comanda en postman
 {
-    "fecha":"27/12/2023 12:00:00",
     "mesa":"mesa1",
     "comensales":"3",
     "lineas":{
@@ -291,7 +286,6 @@ class ComandasController extends AbstractController
 
 /* json para actualizar la comanda en postman
 {
-    "fecha":"27/12/2023 12:00:00",
     "mesa":"mesa1",
     "comensales":"3",
     "lineas":{

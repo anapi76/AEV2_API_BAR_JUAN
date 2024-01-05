@@ -2,10 +2,10 @@
 
 {% block content %}
 
-    {% if resultados is null %}
+    {% if resultados is null or resultados is empty %}
         0 results
         <h4>{{title1}}</h4>
-        <p><a href="/">Volver</a></p>
+        <p><a href="/stock">Volver</a></p>
     {% else %}
         <h4>{{title1}}</h4>
         <table cellpadding="5">

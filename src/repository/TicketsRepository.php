@@ -43,7 +43,7 @@ class TicketsRepository extends EntityRepository
         }
     }
 
-    //Método que comprueba si la comanda se ha insertado correctamente en la BD
+    //Método que comprueba si el ticket se ha insertado correctamente en la BD
     public function testInsert(?TicketsEntity $ticket): bool
     {
         if (empty($ticket) || is_null($ticket)) {

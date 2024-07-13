@@ -16,9 +16,7 @@ class StockRepository extends EntityRepository
         if (!is_null($productos)) {
             foreach ($productos as $producto) {
                 $data = $this->findBy(['producto' => $producto], ['fecha' => 'DESC']);
-                if ($data[0]->getCantidad() > 0) {
-                    $stock[] = $data[0];
-                }
+                $stock[] = $data[0];
             }
         } else {
             $stock = null;
@@ -26,27 +24,67 @@ class StockRepository extends EntityRepository
         return $stock;
     }
 
-    //Método que devuelve un array con el stock de todos los productos cuya cantidad sea mayor que cero, con la fecha que le decimos, si la fecha que le decimos no existe devolverá null
-    public function stockFechaArray(DateTime $fecha): ?array
+    //Método que devuelve un array con el stock de todos los productos con la fecha que le pasamos
+    public function stockFechaArray(DateTime $fecha)
     {
-        $entityManager = $this->getEntityManager();
         $fechaFin = $fecha->setTime(23, 59, 59);
-        $stockRepository = $entityManager->getRepository(StockEntity::class);
-        $stockArray = $stockRepository->findAll();
-        if (!empty($stockArray)) {
-            $data = [];
-            foreach ($stockArray as $stock) {
-                if (($stock->getFecha()->format('d-m-Y') >= $fecha->format('d-m-Y')) && ($stock->getFecha()->format('d-m-Y') <= $fechaFin->format('d-m-Y'))) {
-                    if ($stock->getCantidad() > 0) {
-                        $data[] = $stock;
+        $productos = $this->findProductos();
+        $data = [];
+
+        if (!is_null($productos)) {
+            foreach ($productos as $producto) {
+                $arrayStock = $this->findBy(['producto' => $producto]);
+                if (!empty($arrayStock)) {
+                    $ultimoStock = null;
+                    foreach ($arrayStock as $stock) {
+                        $stockFecha = $stock->getFecha();
+                        if ($stockFecha <= $fechaFin) {
+                            if (is_null($ultimoStock) || $stockFecha > $ultimoStock->getFecha()) {
+                                $ultimoStock = $stock;
+                            }
+                        }
+                    }
+                    if (!is_null($ultimoStock)) {
+                        $data[] = $ultimoStock;
                     }
                 }
             }
-        } else {
-            $data = null;
         }
         return $data;
     }
+
+    /*  public function stockFechaArray(DateTime $fecha)
+    {
+        $fechaFin = $fecha->setTime(23, 59, 59);
+        $productos = $this->findProductos();
+        $data = [];
+
+        if (!is_null($productos)) {
+            foreach ($productos as $producto) {
+                $arrayStock = $this->findBy(['producto' => $producto]);
+                if (!empty($arrayStock)) {
+                    $currentFecha = $fecha;
+                    $ultimoStock = null;
+                    foreach ($arrayStock as $stock) {
+                        $stockFecha = $stock->getFecha();
+                        if ($stockFecha >= $fecha && $stockFecha <= $fechaFin) {
+                            if ($stockFecha > $currentFecha) {
+                                $ultimoStock = $stock;
+                                $currentFecha =  $stockFecha;
+                            }
+                        } elseif ($stockFecha < $fecha && (is_null($ultimoStock) || $stockFecha > $ultimoStock->getFecha())) {
+                            $ultimoStock = $stock;
+                            $currentFecha = $stockFecha;
+                        }
+                    }
+                    if (!is_null($ultimoStock)) {
+                        $data[] = $ultimoStock;
+                    }
+                }
+            }
+        }
+        return $data;
+    } */
 
     //Método que devuelve un array con todos los productos
     public function findProductos(): ?array
